@@ -3,7 +3,7 @@
  *  Copyright (c) 2017, Michael Becker (michael.f.becker@gmail.com)
  *
  *  This file is part of the FreeRTOS C++ Wrappers project.
- *  
+ *
  *  Source Code:
  *  https://github.com/michaelbecker/freertos-addons
  *
@@ -31,40 +31,40 @@
  *  combined work that includes FreeRTOS C++ Wrappers project
  *  without being obliged to provide the source
  *  code for proprietary components.
- * 
+ *
  *  The FreeRTOS C++ Wrappers project GPL exception text follows:
- * 
- *  Any FreeRTOS C++ Wrapper *source code*, whether modified or in it's 
- *  original release form, or whether in whole or in part, can only be 
+ *
+ *  Any FreeRTOS C++ Wrapper *source code*, whether modified or in it's
+ *  original release form, or whether in whole or in part, can only be
  *  distributed by you under the terms of the GNU General Public License plus
  *  this exception.  An independent module is a module which is not derived
  *  from or based on FreeRTOS C++ Wrappers project.
- * 
+ *
  *  Clause 1:
- * 
- *  Linking FreeRTOS C++ Wrappers project  with other modules is making a 
- *  combined work based on FreeRTOS C++ Wrappers project. Thus, the terms 
+ *
+ *  Linking FreeRTOS C++ Wrappers project  with other modules is making a
+ *  combined work based on FreeRTOS C++ Wrappers project. Thus, the terms
  *  and conditions of the GNU General Public License V2 cover the
  *  whole combination.
- * 
- *  As a special exception, the copyright holders of FreeRTOS C++ Wrappers 
- *  project give you permission to link FreeRTOS C++ Wrappers project with 
+ *
+ *  As a special exception, the copyright holders of FreeRTOS C++ Wrappers
+ *  project give you permission to link FreeRTOS C++ Wrappers project with
  *  independent modules to produce a statically linked executable, regardless
- *  of the license terms of these independent modules, and to copy and 
+ *  of the license terms of these independent modules, and to copy and
  *  distribute the resulting executable under terms of your choice,
- *  provided that you also meet, for each linked independent module, the 
- *  terms and conditions of the license of that module.  An independent 
- *  module is a module which is not derived from or based on FreeRTOS C++ 
+ *  provided that you also meet, for each linked independent module, the
+ *  terms and conditions of the license of that module.  An independent
+ *  module is a module which is not derived from or based on FreeRTOS C++
  *  Wrappers project.
- * 
+ *
  *  Clause 2:
- * 
- *  FreeRTOS C++ Wrappers project may not be used for any competitive or 
- *  comparative purpose, including the publication of any form of run time 
- *  or compile time metric, without the express permission of the copyright 
+ *
+ *  FreeRTOS C++ Wrappers project may not be used for any competitive or
+ *  comparative purpose, including the publication of any form of run time
+ *  or compile time metric, without the express permission of the copyright
  *  holder(s) (this is the norm within the industry and is intended to ensure
  *  information accuracy).
- *  
+ *
  ***************************************************************************/
 #ifndef CRITICAL_HPP_
 #define CRITICAL_HPP_
@@ -117,7 +117,7 @@ class CriticalSection {
         /**
          *  Re-enable context switches from an interrupt context.
          */
-        static inline void ExitFromISR();
+        static inline void ExitFromISR()
         {
             taskEXIT_CRITICAL_FROM_ISR();
         }
