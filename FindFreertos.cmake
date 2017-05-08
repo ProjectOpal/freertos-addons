@@ -30,8 +30,9 @@ file(GLOB FREERTOS_SRC_HDRS
      "${FREERTOS_INC_DIR}/*.h"
      "${FREERTOS_CPP_INC_DIR}/*.hpp")
 
+message(STATUS "IS: ${CMAKE_CROSSCOMPILING}")
 # Find all files needed for native build
-if (not CMAKE_CROSSCOMPILING)
+if (NOT ${CMAKE_CROSSCOMPILING})
   message(STATUS "NOTE: Not performing cross compilation build!")
   # Choose the memory managment alogorithm
   set(FREERTOS_SRC ${FREERTOS_SRC}
@@ -53,7 +54,7 @@ if (not CMAKE_CROSSCOMPILING)
 
   set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}
     "-std=c++11 -Wall -Werror -Wextra -Wpedantic -pthread -O0 -g")
-endif(not CMAKE_CROSSCOMPILING)
+endif(NOT ${CMAKE_CROSSCOMPILING})
 
 # Include .h and .hpp files to the build
 include_directories(${FREERTOS_INC_DIR})
