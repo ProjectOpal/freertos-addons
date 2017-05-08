@@ -6,13 +6,13 @@
  *  ---------------------------------------------
  *  + Updated to work with FreeRTOS v8.2.3
  *
- *  + Updated code that works with pthreads to 
+ *  + Updated code that works with pthreads to
  *    treat pthread_t data as opaque data structures,
- *    as specified in the POSIX standard. Likewise, 
+ *    as specified in the POSIX standard. Likewise,
  *    cannot initialize them to NULL, not portable.
  *
- *  + Since FreeRTOS is not multicore, we are forcing 
- *    all of the pthreads that simulate FreeRTOS tasks 
+ *  + Since FreeRTOS is not multicore, we are forcing
+ *    all of the pthreads that simulate FreeRTOS tasks
  *    to execute on a single core.
  *
  */
@@ -232,13 +232,13 @@ static void ResumeThread( pthread_t Thread )
 
 
 /**
- *  Utility function to lookup a pthread_t based on 
+ *  Utility function to lookup a pthread_t based on
  *  a FreeRTOS Task Handle.
  */
 static int LookupThread(xTaskHandle hTask, pthread_t *Thread)
 {
     int i;
-    
+
     for (i = 0; i < MAX_NUMBER_OF_TASKS; i++)
     {
         if (pxThreads[i].hTask == hTask)
@@ -282,7 +282,7 @@ static portBASE_TYPE prvGetTaskCriticalNesting( pthread_t Thread )
             return uxNesting;
         }
     }
-    
+
     assert(!"Failed finding pthread for task mapping!");
 }
 
@@ -410,7 +410,7 @@ static void *ThreadStartWrapper( void * pvParams )
 
     pthread_cleanup_push( DeleteThreadCleanupRoutine, State );
 
-    pthread_mutex_lock(&xSingleThreadMutex); 
+    pthread_mutex_lock(&xSingleThreadMutex);
     SuspendThread( pthread_self() );
 
     State->pxCode( State->pvParams );
@@ -431,7 +431,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
     int i;
     pthread_attr_t xThreadAttributes;
     cpu_set_t cpuset;
- 
+
     pthread_once( &hSigSetupThread, prvSetupSignalsAndSchedulerPolicy );
 
     /* No need to join the threads. */
@@ -463,9 +463,9 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 
     xSentinel = 0;
 
-    rc = pthread_create(&pxThreads[lIndexOfLastAddedTask].Thread, 
-                        &xThreadAttributes, 
-                        ThreadStartWrapper, 
+    rc = pthread_create(&pxThreads[lIndexOfLastAddedTask].Thread,
+                        &xThreadAttributes,
+                        ThreadStartWrapper,
                         (void *)&pxThreads[lIndexOfLastAddedTask]
                         );
     if (rc != 0)
@@ -473,13 +473,13 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
         /* Thread create failed, signal the failure */
         pxTopOfStack = 0;
     }
-    else 
+    else
     {
         CPU_ZERO(&cpuset);
         CPU_SET(0, &cpuset);
 
-        rc = pthread_setaffinity_np(pxThreads[lIndexOfLastAddedTask].Thread, 
-                                    sizeof(cpu_set_t), 
+        rc = pthread_setaffinity_np(pxThreads[lIndexOfLastAddedTask].Thread,
+                                    sizeof(cpu_set_t),
                                     &cpuset);
 	    configASSERT( rc == 0 );
         pxThreads[lIndexOfLastAddedTask].Valid = 1;
@@ -519,9 +519,9 @@ static void prvSetupTimerInterrupt( void )
     itimer.it_value.tv_usec = MicroSeconds;
 
     printf("Timer Setup:\n");
-    printf("  Interval: %ld seconds, %ld useconds\n", 
+    printf("  Interval: %ld seconds, %ld useconds\n",
             itimer.it_interval.tv_sec, itimer.it_interval.tv_usec);
-    printf("  Current: %ld seconds, %ld useconds\n", 
+    printf("  Current: %ld seconds, %ld useconds\n",
             itimer.it_value.tv_sec, itimer.it_value.tv_usec);
 
     /* Set-up the timer interrupt. */
@@ -735,11 +735,11 @@ void vPortForciblyEndThread( void *pxTaskToDelete )
     if ( !pthread_equal(pthread_self(), ThreadToDelete) )
     {
         /* Cancelling a thread that is not me. */
- 
+
         /* Send a signal to wake the task so that it definitely cancels. */
         pthread_testcancel();
         pthread_cancel( ThreadToDelete );
- 
+
         /* Pthread Clean-up function will note the cancellation. */
         pthread_mutex_unlock( &xSingleThreadMutex );
     }
