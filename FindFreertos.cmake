@@ -30,7 +30,6 @@ file(GLOB FREERTOS_SRC_HDRS
      "${FREERTOS_INC_DIR}/*.h"
      "${FREERTOS_CPP_INC_DIR}/*.hpp")
 
-message(STATUS "IS: ${CMAKE_CROSSCOMPILING}")
 # Find all files needed for native build
 if (NOT ${CMAKE_CROSSCOMPILING})
   message(STATUS "NOTE: Not performing cross compilation build!")
