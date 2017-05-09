@@ -1,5 +1,7 @@
 # This is an example script for use with CMake projects for locating and
 # configuring the FreeRTOS C++ library.
+cmake_minimum_required(VERSION 3.0)
+project(Freertos C CXX)
 
 # Make a really good guess regarding location of FREERTOS_SRC_ROOT_FOLDER
 if(NOT DEFINED FREERTOS_SRC_ROOT_FOLDER)
@@ -32,7 +34,7 @@ file(GLOB FREERTOS_SRC_HDRS
 
 # Find all files needed for native build
 if (NOT ${CMAKE_CROSSCOMPILING})
-  message(STATUS "NOTE: Not performing cross compilation build!")
+  # message(STATUS "NOTE: Not performing cross compilation build!")
   # Choose the memory managment alogorithm
   set(FREERTOS_SRC ${FREERTOS_SRC}
                    "${PORTABLE_SRC_MEM_MANG_DIR}/heap_3.c")
@@ -45,19 +47,44 @@ if (NOT ${CMAKE_CROSSCOMPILING})
 
   # Include the FreeRTOSConfig file
   set(FREERTOS_SRC_HDRS ${FREERTOS_SRC_HDRS}
-      "${CMAKE_CURRENT_SOURCE_DIR}/src/SHIL/FreeRTOSConfig.h")
+      "${PORTABLE_SRC_DIR}/FreeRTOSConfig.h")
 
   # Include Linux Macros
   set (FREERTOS_SRC_HDRS ${FREERTOS_SRC_HDRS}
-       "${CMAKE_CURRENT_SOURCE_DIR}/src/SHIL/FreeRTOSmacros.hpp")
+       "${PORTABLE_SRC_DIR}/FreeRTOSmacros.hpp")
 
-  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}
-    "-std=c++11 -Wall -Werror -Wextra -Wpedantic -pthread -O0 -g")
 endif(NOT ${CMAKE_CROSSCOMPILING})
 
 # Include .h and .hpp files to the build
-include_directories(${FREERTOS_INC_DIR})
-include_directories(${FREERTOS_CPP_INC_DIR})
-include_directories(${PORTABLE_SRC_DIR})
+set(FREERTOS_INCLUDE_DIRS ${FREERTOS_INC_DIR}
+                          ${FREERTOS_CPP_INC_DIR}
+                          ${PORTABLE_SRC_DIR})
 
-message(STATUS "Loaded FreeRTOS and FreeRTOSCPP files")
+add_library(freertos STATIC ${FREERTOS_SRC} ${FREERTOS_CPP_SRC})
+
+if (NOT ${CMAKE_CROSSCOMPILING})
+  target_compile_options(freertos PUBLIC
+                         -Wall -Werror -Wextra -Wpedantic -pthread -O0 -g)
+endif(NOT ${CMAKE_CROSSCOMPILING})
+
+target_include_directories(freertos PUBLIC ${FREERTOS_INC_DIR}
+                                    PUBLIC ${FREERTOS_CPP_INC_DIR}
+                                    PUBLIC ${PORTABLE_SRC_DIR}
+                                    PRIVATE ${FREERTOS_SRC_DIR}
+                                    PRIVATE ${PORTABLE_SRC_MEM_MANG_DIR}
+                                    PRIVATE ${FREERTOS_CPP_INC_DIR})
+
+
+# include_directories(FREERTOS_INCLUDE_DIRS)
+
+# include(FindPackageHandleStandardArgs)
+# FIND_PACKAGE_HANDLE_STANDARD_ARGS(FREERTOS DEFAULT_MSG
+#                                   FREERTOS_INCLUDE_DIRS
+#                                   FREERTOS_SRC
+#                                   FREERTOS_SRC_HDRS)
+
+# set(FREERTOS_CPP_INC_DIR ${FREERTOS_CPP_INC_DIR} PARENT_SCOPE)
+# set(PORTABLE_SRC_DIR ${PORTABLE_SRC_DIR} PARENT_SCOPE)
+
+
+# message(STATUS "Loaded FreeRTOS and FreeRTOSCPP files")
